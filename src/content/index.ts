@@ -1,6 +1,13 @@
 import { getEle } from '@/utils'
 
-const keycodes = {
+// [attr~=value]  "value xxx"
+// [attr|=value] "value-xxx"
+// [attr^=value] "valuexxx"
+// [attr$=value] "xxxvalue"
+// [attr*=value] "xxxvaluexxx"
+// [class^='value' i] i or s
+
+const keyCodeMap = {
   left: 'ArrowLeft',
   up: 'ArrowUp',
   right: 'ArrowRight',
@@ -16,11 +23,11 @@ function setKeypad() {
 // https://postgrest.org/en/stable/releases/v10.2.0.html
 
 function keypad(e: KeyboardEvent) {
-  const prevEle = getEle('[role="navigation"] a[rel="prev"]')
-  const nextEle = getEle('[role="navigation"] a[rel="next"]')
-  if ([keycodes.left, keycodes.up].includes(e.code)) {
+  const prevEle = getEle('a[rel="prev"]')
+  const nextEle = getEle('a[rel="next"]')
+  if ([keyCodeMap.left, keyCodeMap.up].includes(e.code)) {
     prevEle && prevEle.click()
-  } else if ([keycodes.right, keycodes.down].includes(e.code)) {
+  } else if ([keyCodeMap.right, keyCodeMap.down].includes(e.code)) {
     nextEle && nextEle.click()
     console.log(nextEle, 'nextEle')
   }

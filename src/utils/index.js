@@ -26,26 +26,22 @@ export function createEle(option) {
   return el
 }
 
-export function domMutation(targetNode, cb) {
-  const cbFun = debounce(function () {
-    cb(...arguments)
-    observer.disconnect()
-  }, 200)
-  const observer = new MutationObserver(cbFun)
-  const config = { childList: true }
-  observer.observe(targetNode, config)
+// https://www.benpickles.com/articles/51-finding-a-dom-nodes-common-ancestor-using-javascript
+function parents(node) {
+  let nodes = []
+  for (; node; node = node.parentNode) {
+    nodes.unshift(node)
+  }
+  return nodes
 }
 
-// https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_debounce
-function debounce(func, wait, immediate) {
-  let timeout
-  return () => {
-    const args = arguments
-    clearTimeout(timeout)
-    timeout = setTimeout(function () {
-      timeout = null
-      if (!immediate) func.apply(this, args)
-    }, wait)
-    if (immediate && !timeout) func.apply(this, args)
+export function commonAncestor(node1, node2) {
+  let parents1 = parents(node1)
+  let parents2 = parents(node2)
+
+  if (parents1[0] != parents2[0]) throw 'No common ancestor!'
+
+  for (let i = 0; i < parents1.length; i++) {
+    if (parents1[i] != parents2[i]) return parents1[i - 1]
   }
 }
