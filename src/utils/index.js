@@ -18,8 +18,7 @@ export function getAttrs(el) {
   return res
 }
 
-export function createEle(option) {
-  const { tag, content, class: className } = option
+export function createEle({ tag, content, class: className }) {
   const el = document.createElement(tag)
   el.innerText = content || ''
   el.className = className

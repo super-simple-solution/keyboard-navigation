@@ -9,9 +9,7 @@ import { getEle } from '@/utils'
 
 const keyCodeMap = {
   left: 'ArrowLeft',
-  up: 'ArrowUp',
   right: 'ArrowRight',
-  down: 'ArrowDown',
 }
 
 setKeypad()
@@ -25,10 +23,21 @@ function setKeypad() {
 function keypad(e: KeyboardEvent) {
   const prevEle = getEle('a[rel="prev"]')
   const nextEle = getEle('a[rel="next"]')
-  if ([keyCodeMap.left, keyCodeMap.up].includes(e.code)) {
+  if (keyCodeMap.left === e.code) {
     prevEle && prevEle.click()
-  } else if ([keyCodeMap.right, keyCodeMap.down].includes(e.code)) {
+  } else if (keyCodeMap.right === e.code) {
     nextEle && nextEle.click()
     console.log(nextEle, 'nextEle')
   }
 }
+
+chrome.runtime
+  .sendMessage({
+    greeting: 'to-get-pattern',
+    data: {
+      domain: location.hostname,
+    },
+  })
+  .then((res) => {
+    patternList = res
+  })

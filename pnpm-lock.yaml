@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@supabase/supabase-js':
     specifier: ^2.32.0
@@ -9,6 +13,9 @@ devDependencies:
   '@crxjs/vite-plugin':
     specifier: 2.0.0-beta.18
     version: 2.0.0-beta.18
+  '@types/chrome':
+    specifier: ^0.0.243
+    version: 0.0.243
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.3.0
     version: 6.3.0(@typescript-eslint/parser@6.3.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -455,6 +462,13 @@ packages:
       - supports-color
     dev: false
 
+  /@types/chrome@0.0.243:
+    resolution: {integrity: sha512-4PHv0kxxxpZFHWPBiJJ9TWH8kbx0567j1b2djnhpJjpiSGNI7UKkz7dSEECBtQ0B3N5nQTMwSB/5IopkWGAbEA==}
+    dependencies:
+      '@types/filesystem': 0.0.32
+      '@types/har-format': 1.2.12
+    dev: true
+
   /@types/eslint@8.44.1:
     resolution: {integrity: sha512-XpNDc4Z5Tb4x+SW1MriMVeIsMoONHCkWFMkR/aPJbzEsxqHy+4Glu/BqTdPrApfDeMaXbtNh6bseNgl5KaWrSg==}
     dependencies:
@@ -464,6 +478,20 @@ packages:
 
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
+    dev: true
+
+  /@types/filesystem@0.0.32:
+    resolution: {integrity: sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==}
+    dependencies:
+      '@types/filewriter': 0.0.29
+    dev: true
+
+  /@types/filewriter@0.0.29:
+    resolution: {integrity: sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ==}
+    dev: true
+
+  /@types/har-format@1.2.12:
+    resolution: {integrity: sha512-P20p/YBrqUBmzD6KhIQ8EiY4/RRzlekL4eCvfQnulFPfjmiGxKIoyCeI7qam5I7oKH3P8EU4ptEi0EfyGoLysw==}
     dev: true
 
   /@types/json-schema@7.0.12:

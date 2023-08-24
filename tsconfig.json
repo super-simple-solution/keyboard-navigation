@@ -14,10 +14,10 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "chrome"],
     "lib": [
       "esnext",
-      "dom"
+      "dom",
     ],
     "baseUrl": ".",
     "paths": {
@@ -34,7 +34,6 @@
     "node_modules",
     "dist"
   ],
-  "types": [],
   "typeRoots": [
     "./node_modules/@types",
     "./src/types/",
