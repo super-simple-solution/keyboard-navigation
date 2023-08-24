@@ -39,5 +39,6 @@ chrome.runtime
     },
   })
   .then((res) => {
-    patternList = res
+    console.log(res, 'xxxx')
+    // patternList = res
   })

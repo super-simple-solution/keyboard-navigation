@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import { crx } from '@crxjs/vite-plugin'
 import eslintPlugin from 'vite-plugin-eslint'
 import tailwind from 'tailwindcss'
+import vue from '@vitejs/plugin-vue'
 import manifest from './manifest.json'
 
 export default defineConfig({
@@ -14,7 +15,7 @@ export default defineConfig({
   output: {
     sourcemap: 'inline',
   },
-  plugins: [crx({ manifest }), eslintPlugin()],
+  plugins: [vue(), crx({ manifest }), eslintPlugin()],
   css: {
     // https://github.com/vitejs/vite/discussions/8216
     modules: {
