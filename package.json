@@ -11,12 +11,9 @@
     "@types/chrome": "^0.0.243",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
     "@typescript-eslint/parser": "^6.4.1",
-    "@vitejs/plugin-vue": "^4.3.3",
-    "@vue/reactivity": "^3.3.4",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.17.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "sass": "^1.63.6",
@@ -27,7 +24,6 @@
     "vite-plugin-style-import": "^1.4.1"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.32.0",
-    "vue": "^3.3.4"
+    "@supabase/supabase-js": "^2.32.0"
   }
 }
