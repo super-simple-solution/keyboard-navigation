@@ -44,9 +44,8 @@ chrome.runtime
     // patternList = res
   })
 
-//监听popup发送的事件
+//监听popup发送的事件，监听鼠标hover元素
 chrome.runtime.onMessage.addListener((request) => {
-  console.log(request, '=============')
   if (request && request.action === 'detect') {
     document.body.addEventListener('mouseover', (e) => {
       const target = e.target as Element
@@ -58,7 +57,7 @@ chrome.runtime.onMessage.addListener((request) => {
     })
     document.body.addEventListener('click', (e) => {
       e.preventDefault()
-      console.log(e.target, '-------')
+      console.log(e, '-------')
     })
   }
 })

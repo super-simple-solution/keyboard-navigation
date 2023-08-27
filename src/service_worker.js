@@ -3,7 +3,6 @@ import supabaseClient from '@/lib/supabase'
 
 const contentReq = {
   'to-get-pattern': toGetPattern,
-  'to-detect-element': toDetectElement,
 }
 
 const syncHour = 3
@@ -27,16 +26,6 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     .in('domain', domain ? [domain, '*'] : ['*'])
   sendResponse && sendResponse(patternList[0])
   chrome.storage.local.set({ pattern_list: patternList, pattern_list_updated_at: Date.now() })
-}
-
-function toDetectElement() {
-  console.log(11111)
-  chrome.runtime.addListener(() => {
-    console.log(2222)
-    document.addEventListener('mouseenter', (e) => {
-      console.log(e.target, 'e.target')
-    })
-  })
 }
 
 function refreshPattern() {
