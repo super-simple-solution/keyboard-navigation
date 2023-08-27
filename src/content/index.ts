@@ -1,4 +1,5 @@
 import { getEle } from '@/utils'
+import '@/style/index.scss'
 
 // [attr~=value]  "value xxx"
 // [attr|=value] "value-xxx"
@@ -42,3 +43,22 @@ chrome.runtime
     console.log(res, 'xxxx')
     // patternList = res
   })
+
+//监听popup发送的事件
+chrome.runtime.onMessage.addListener((request) => {
+  console.log(request, '=============')
+  if (request && request.action === 'detect') {
+    document.body.addEventListener('mouseover', (e) => {
+      const target = e.target as Element
+      target && target.classList.add('sss-hover')
+    })
+    document.body.addEventListener('mouseout', (e) => {
+      const target = e.target as Element
+      target && target.classList.remove('sss-hover')
+    })
+    document.body.addEventListener('click', (e) => {
+      e.preventDefault()
+      console.log(e.target, '-------')
+    })
+  }
+})

@@ -29,3 +29,7 @@ body {
   height: 48px;
   @apply flex justify-center items-center hover:shadow-2xl hover:text-[#7ED161] bg-white text-[#000]  cursor-pointer;
 }
+
+.sss-hover {
+  background: rgba(255, 0, 0, 0.5) !important;
+}
