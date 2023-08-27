@@ -7,10 +7,11 @@ const contentReq = {
 
 const syncHour = 3
 async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
-  const { pattern_list_updated_at, pattern_list: localPatternList } = await chrome.storage.local.get([
+  let { pattern_list_updated_at, pattern_list: localPatternList } = await chrome.storage.local.get([
     'pattern_list_updated_at',
     'pattern_list',
   ])
+  localPatternList = localPatternList || []
   if (
     !forceUpdate &&
     localPatternList.length &&
@@ -24,6 +25,7 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     .from('pagination_selector')
     .select('domain,prev_selector,next_selector,updated_at')
     .in('domain', domain ? [domain, '*'] : ['*'])
+  console.log(patternList, 'patternList')
   sendResponse && sendResponse(patternList[0])
   chrome.storage.local.set({ pattern_list: patternList, pattern_list_updated_at: Date.now() })
 }

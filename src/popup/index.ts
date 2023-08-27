@@ -5,6 +5,8 @@ const detectEle = createEle({ tag: 'div', content: 'To Detect Element', class: '
 const preBtnEle = createEle({ tag: 'div', content: 'Prev', class: 'sss-btn sss-pre-btn' })
 const nextBtnEle = createEle({ tag: 'div', content: 'Next', class: 'sss-btn sss-next-btn' })
 const init = () => {
+  console.log(123223424)
+  console.log(123223424)
   const contentEle = getEle('#popup-app')
   if (contentEle) {
     const popupContainer = createEle({ tag: 'div', class: 'sss-popup-container' })
