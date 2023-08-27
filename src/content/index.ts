@@ -12,6 +12,7 @@ const keyCodeMap = {
   left: 'ArrowLeft',
   right: 'ArrowRight',
 }
+console.log(123123)
 
 setKeypad()
 
