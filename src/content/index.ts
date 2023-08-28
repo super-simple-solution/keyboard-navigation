@@ -2,11 +2,13 @@ import '@/style/index.scss'
 import { setKeypad } from './util'
 import { PatternData } from '@/types/local.d'
 
+const domain = location.hostname
+
 chrome.runtime
   .sendMessage({
     greeting: 'to-get-pattern',
     data: {
-      domain: location.hostname,
+      domain,
     },
   })
   .then((res: PatternData) => {
@@ -24,13 +26,13 @@ chrome.runtime.onMessage.addListener((request) => {
 document.body.addEventListener('mouseover', (e) => {
   if (!isDetecting) return
   const target = e.target as Element
-  target && target.classList.add('sss-hover')
+  target.classList.add('sss-hover')
 })
 
 document.body.addEventListener('mouseout', (e) => {
   if (!isDetecting) return
   const target = e.target as Element
-  target && target.classList.remove('sss-hover')
+  target.classList.remove('sss-hover')
 })
 
 document.body.addEventListener('click', (e) => {
@@ -48,9 +50,8 @@ document.body.addEventListener('click', (e) => {
     .sendMessage({
       greeting: 'to-save-detect-ele',
       data: {
-        domain: location.hostname,
-        type: 'prev_selector',
-        element: `${parentTagName}>${targetTagName}.${targetClassList}`,
+        domain,
+        next_selector: `${parentTagName}>${targetTagName}.${targetClassList}`,
       },
     })
     .then(() => {
