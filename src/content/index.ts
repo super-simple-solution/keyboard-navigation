@@ -1,35 +1,6 @@
-import { getEle } from '@/utils'
 import '@/style/index.scss'
-
-// [attr~=value]  "value xxx"
-// [attr|=value] "value-xxx"
-// [attr^=value] "valuexxx"
-// [attr$=value] "xxxvalue"
-// [attr*=value] "xxxvaluexxx"
-// [class^='value' i] i or s
-
-const keyCodeMap = {
-  left: 'ArrowLeft',
-  right: 'ArrowRight',
-}
-setKeypad()
-
-function setKeypad() {
-  document.addEventListener('keydown', keypad, false)
-}
-
-// https://postgrest.org/en/stable/releases/v10.2.0.html
-
-function keypad(e: KeyboardEvent) {
-  const prevEle = getEle('a[rel="prev"]')
-  const nextEle = getEle('a[rel="next"]')
-  if (keyCodeMap.left === e.code) {
-    prevEle && prevEle.click()
-  } else if (keyCodeMap.right === e.code) {
-    nextEle && nextEle.click()
-    console.log(nextEle, 'nextEle')
-  }
-}
+import { setKeypad } from './util'
+import { PatternData } from '@/types/local.d'
 
 chrome.runtime
   .sendMessage({
@@ -38,9 +9,8 @@ chrome.runtime
       domain: location.hostname,
     },
   })
-  .then((res) => {
-    console.log(res, 'xxxx')
-    // patternList = res
+  .then((res: PatternData) => {
+    setKeypad(res)
   })
 
 let isDetecting = false
@@ -48,15 +18,19 @@ let isDetecting = false
 chrome.runtime.onMessage.addListener((request) => {
   if (request && request.action === 'detect') {
     isDetecting = true
-    document.body.addEventListener('mouseover', (e) => {
-      const target = e.target as Element
-      target && target.classList.add('sss-hover')
-    })
-    document.body.addEventListener('mouseout', (e) => {
-      const target = e.target as Element
-      target && target.classList.remove('sss-hover')
-    })
   }
+})
+
+document.body.addEventListener('mouseover', (e) => {
+  if (!isDetecting) return
+  const target = e.target as Element
+  target && target.classList.add('sss-hover')
+})
+
+document.body.addEventListener('mouseout', (e) => {
+  if (!isDetecting) return
+  const target = e.target as Element
+  target && target.classList.remove('sss-hover')
 })
 
 document.body.addEventListener('click', (e) => {
