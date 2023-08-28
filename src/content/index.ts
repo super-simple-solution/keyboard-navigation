@@ -7,13 +7,9 @@ const domain = location.hostname
 chrome.runtime
   .sendMessage({
     greeting: 'to-get-pattern',
-    data: {
-      domain,
-    },
+    data: { domain },
   })
-  .then((res: PatternData) => {
-    setKeypad(res)
-  })
+  .then((res: PatternData) => setKeypad(res))
 
 let isDetecting = false
 //监听popup发送的事件，监听鼠标hover元素
@@ -51,10 +47,12 @@ document.body.addEventListener('click', (e) => {
       greeting: 'to-save-detect-ele',
       data: {
         domain,
-        next_selector: `${parentTagName}>${targetTagName}.${targetClassList}`,
+        next_selector: [`${parentTagName}>${targetTagName}.${targetClassList}`],
+        prev_selector: [],
       },
     })
-    .then(() => {
+    .then((res) => {
       isDetecting = false
+      setKeypad(res)
     })
 })

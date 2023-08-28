@@ -30,28 +30,32 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     sendResponse(domainPattern || localPatternList[0])
     return
   }
-  const [{ data: patternList }, { data: domainList }] = await Promise.all([
-    dbTable.select('domain,prev_selector,next_selector,updated_at').in('domain', domain ? [domain, '*'] : ['*']),
-    dbTable.select('domain'),
-  ])
+  const { data: patternList } = await dbTable.select().in('domain', domain ? [domain, '*'] : ['*'])
+  const { data: domainList } = await dbTable.select('domain')
   sendResponse && sendResponse(patternList.find((item) => item.domain === domain || '*'))
-  chrome.storage.local.set({ pattern_list: patternList, domain_list: domainList, pattern_list_updated_at: Date.now() })
+  chrome.storage.local.set({
+    pattern_list: patternList,
+    domain_list: domainList,
+    pattern_list_updated_at: Date.now(),
+  })
 }
 
-async function toSaveDetectEle(params) {
+async function toSaveDetectEle(params, sendResponse) {
   const paginationRes = await dbTable.select('domain').eq('domain', params.domain)
   if (paginationRes.data.length) {
-    const { data, error } = await dbTable.update(params).eq('domain', params.domain)
-    console.log(data, error, 'update')
+    const { data } = await dbTable.update(params).eq('domain', params.domain).select()
+    sendResponse && sendResponse(data[0])
+    refreshPattern()
   } else {
-    const { data, error } = await dbTable.insert(params)
-    console.log(data, error, 'insert')
+    const { data } = await dbTable.insert(params).select()
+    sendResponse && sendResponse(data[0])
+    refreshPattern()
   }
 }
 
 function refreshPattern() {
-  toGetPattern(true)
+  toGetPattern({ forceUpdate: true })
 }
-chrome.runtime.onInstalled.addListener(() => refreshPattern(true))
+chrome.runtime.onInstalled.addListener(refreshPattern)
 
 initEventHandler(contentReq)
