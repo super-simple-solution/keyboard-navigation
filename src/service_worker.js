@@ -1,8 +1,6 @@
 import { initEventHandler } from '@/utils/extension-action'
 import supabaseClient from '@/lib/supabase'
 
-const dbTable = supabaseClient.from('pagination_selector')
-
 const contentReq = {
   'to-get-pattern': toGetPattern,
   'to-save-detect-ele': toSaveDetectEle,
@@ -30,8 +28,13 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     sendResponse(domainPattern || localPatternList[0])
     return
   }
-  const { data: patternList } = await dbTable.select().in('domain', domain ? [domain, '*'] : ['*'])
-  const { data: domainList } = await dbTable.select('domain')
+  const [{ data: patternList }, { data: domainList }] = await Promise.all([
+    supabaseClient
+      .from('pagination_selector')
+      .select()
+      .in('domain', domain ? [domain, '*'] : ['*']),
+    supabaseClient.from('pagination_selector').select('domain'),
+  ])
   sendResponse && sendResponse(patternList.find((item) => item.domain === domain || '*'))
   chrome.storage.local.set({
     pattern_list: patternList,
@@ -41,13 +44,17 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
 }
 
 async function toSaveDetectEle(params, sendResponse) {
-  const paginationRes = await dbTable.select('domain').eq('domain', params.domain)
+  const paginationRes = await supabaseClient.from('pagination_selector').select('domain').eq('domain', params.domain)
   if (paginationRes.data.length) {
-    const { data } = await dbTable.update(params).eq('domain', params.domain).select()
+    const { data } = await supabaseClient
+      .from('pagination_selector')
+      .update(params)
+      .eq('domain', params.domain)
+      .select()
     sendResponse && sendResponse(data[0])
     refreshPattern()
   } else {
-    const { data } = await dbTable.insert(params).select()
+    const { data } = await supabaseClient.from('pagination_selector').insert(params).select()
     sendResponse && sendResponse(data[0])
     refreshPattern()
   }
@@ -56,6 +63,7 @@ async function toSaveDetectEle(params, sendResponse) {
 function refreshPattern() {
   toGetPattern({ forceUpdate: true })
 }
+
 chrome.runtime.onInstalled.addListener(refreshPattern)
 
 initEventHandler(contentReq)
