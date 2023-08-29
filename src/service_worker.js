@@ -1,13 +1,23 @@
 import { initEventHandler } from '@/utils/extension-action'
 import supabaseClient from '@/lib/supabase'
 
+function dbTable() {
+  return supabaseClient.from('pagination_selector')
+}
+
 const contentReq = {
   'to-get-pattern': toGetPattern,
   'to-save-detect-ele': toSaveDetectEle,
 }
 
+const specificDomainList = ['gitbook.io']
+
 const syncHour = 3
 async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
+  const specificDomain = specificDomainList.find((item) => domain.includes(item))
+  if (specificDomain) {
+    domain = specificDomain
+  }
   let {
     pattern_list_updated_at,
     pattern_list: localPatternList,
@@ -29,11 +39,10 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     return
   }
   const [{ data: patternList }, { data: domainList }] = await Promise.all([
-    supabaseClient
-      .from('pagination_selector')
-      .select()
+    dbTable()
+      .select('domain,prev_selector,next_selector')
       .in('domain', domain ? [domain, '*'] : ['*']),
-    supabaseClient.from('pagination_selector').select('domain'),
+    dbTable().select('domain'),
   ])
   sendResponse && sendResponse(patternList.find((item) => item.domain === domain || '*'))
   chrome.storage.local.set({
@@ -44,17 +53,13 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
 }
 
 async function toSaveDetectEle(params, sendResponse) {
-  const paginationRes = await supabaseClient.from('pagination_selector').select('domain').eq('domain', params.domain)
+  const paginationRes = await dbTable().select('domain').eq('domain', params.domain)
   if (paginationRes.data.length) {
-    const { data } = await supabaseClient
-      .from('pagination_selector')
-      .update(params)
-      .eq('domain', params.domain)
-      .select()
+    const { data } = await dbTable().update(params).eq('domain', params.domain).select()
     sendResponse && sendResponse(data[0])
     refreshPattern()
   } else {
-    const { data } = await supabaseClient.from('pagination_selector').insert(params).select()
+    const { data } = await dbTable().insert(params).select()
     sendResponse && sendResponse(data[0])
     refreshPattern()
   }

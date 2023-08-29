@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["vite/client", "chrome"],
+    "types": ["vite/client", "chrome", "toastify-js"],
     "lib": [
       "esnext",
       "dom",

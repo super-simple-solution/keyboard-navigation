@@ -3,4 +3,5 @@ export type PatternData = {
   next_selector: string[]
   prev_selector: string[]
   updated_at: string | null
+  test_url: string
 }
