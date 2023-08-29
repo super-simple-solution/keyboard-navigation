@@ -1,10 +1,9 @@
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
-import tingle from 'tingle.js'
-
 import '@/style/index.scss'
 import { setKeypad } from './util'
 import { PatternData } from '@/types/local.d'
+import Modal from './modal'
 
 const domain = location.hostname
 
@@ -38,6 +37,8 @@ document.body.addEventListener('mouseout', (e) => {
 document.body.addEventListener('click', (e) => {
   if (!isDetecting) return
   e.preventDefault()
+  Modal.open()
+  isDetecting = false
   const target = e.target as Element
   const targetTagName = target.localName
   const targetClassList =
@@ -59,51 +60,17 @@ document.body.addEventListener('click', (e) => {
       },
     })
     .then((res) => {
+      target.classList.remove('sss-hover')
       isDetecting = false
-      tingle
       Toastify({
         text: 'Detect Success',
-        duration: 3000,
+        duration: 10000,
+        className: 'sss-toast',
+        position: 'center',
+        style: { top: '50%' },
       }).showToast()
       setKeypad(res)
     })
 })
-
-const modal = new tingle.modal({
-  footer: true,
-  stickyFooter: false,
-  closeMethods: ['overlay', 'button', 'escape'],
-  closeLabel: 'Close',
-  cssClass: ['custom-class-1', 'custom-class-2'],
-  onOpen: function () {
-    console.log('modal open')
-  },
-  onClose: function () {
-    console.log('modal closed')
-  },
-  beforeClose: function () {
-    // here's goes some logic
-    // e.g. save content before closing the modal
-    return true // close the modal
-  },
-})
-
-// set content
-modal.setContent('"<h1>here\'s some content</h1>"')
-
-// add a button
-modal.addFooterBtn('Button label', 'tingle-btn tingle-btn--primary', function () {
-  // here goes some logic
-  modal.close()
-})
-
-// add another button
-modal.addFooterBtn('Dangerous action !', 'tingle-btn tingle-btn--danger', function () {
-  // here goes some logic
-  modal.close()
-})
-
-// open modal
-modal.open()
 
 // function geneSelector(el: Element, ancestorEl: Element) {}

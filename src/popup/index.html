@@ -9,25 +9,12 @@
     <div id="popup-app">
       <div class="container">
         <div class="detect">To Detect Element</div>
-        <div class="btn-container">
+        <!-- <div class="btn-container">
           <div id="pre" class="btn">Prev</div>
           <div id="next" class="btn">Next</div>
-        </div>
+        </div> -->
       </div>
     </div>
-    <dialog id="MiniDialog" modal-mode="mini">
-      <form method="dialog">
-        <article>
-          <p>Are you sure you want to remove this user?</p>
-        </article>
-        <footer>
-          <menu>
-            <button autofocus type="reset" onclick="this.closest('dialog').close('cancel')">Cancel</button>
-            <button type="submit" value="confirm">Confirm</button>
-          </menu>
-        </footer>
-      </form>
-    </dialog>
     <script type="module" src="/src/popup/index.ts"></script>
   </body>
 </html>

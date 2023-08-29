@@ -1,8 +1,8 @@
-import './style/index.scss'
+import './style.scss'
 
-const detectEle = document.querySelector('.btn-container')
-detectEle?.addEventListener('click', (e) => {
-  if ((e.target as Element).className !== 'btn') return
+const detectEle = document.querySelector('.detect')
+detectEle?.addEventListener('click', () => {
+  // if ((e.target as Element).className !== 'btn') return
   chrome.tabs.query({ active: true, lastFocusedWindow: true }).then((tab) => {
     const tabId = tab[0]?.id
     if (!tabId) return

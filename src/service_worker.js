@@ -14,9 +14,11 @@ const specificDomainList = ['gitbook.io']
 
 const syncHour = 3
 async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
-  const specificDomain = specificDomainList.find((item) => domain.includes(item))
-  if (specificDomain) {
-    domain = specificDomain
+  if (domain) {
+    const specificDomain = specificDomainList.find((item) => domain.includes(item))
+    if (specificDomain) {
+      domain = specificDomain
+    }
   }
   let {
     pattern_list_updated_at,
