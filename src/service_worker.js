@@ -10,7 +10,7 @@ const contentReq = {
   'to-save-detect-ele': toSaveDetectEle,
 }
 
-const specificDomainList = ['gitbook.io']
+const specificDomainList = ['gitbook.']
 
 const syncHour = 3
 async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
@@ -49,7 +49,7 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
   sendResponse && sendResponse(patternList.find((item) => item.domain === domain || '*'))
   chrome.storage.local.set({
     pattern_list: patternList,
-    domain_list: domainList,
+    domain_list: domainList.map((item) => item.domain),
     pattern_list_updated_at: Date.now(),
   })
 }
