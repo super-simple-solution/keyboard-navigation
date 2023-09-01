@@ -6,6 +6,12 @@ import tailwind from 'tailwindcss'
 import manifest from './manifest.json'
 
 export default defineConfig({
+  build: {
+    minify: 'esbuild',
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
