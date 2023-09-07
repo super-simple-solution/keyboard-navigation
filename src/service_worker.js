@@ -32,7 +32,10 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
   config.localSpecificDomainList = config.localSpecificDomainList || []
   localPatternList = localPatternList || []
   domain_list = domain_list || []
-  if (ignoreDomain(domain, config.localIgnoreDomainList)) return
+  if (ignoreDomain(domain, config.localIgnoreDomainList)) {
+    sendResponse && sendResponse()
+    return
+  }
   const domainTarget = domain_list.find((item) => item === domain)
   const domainPattern = localPatternList.find((item) => item.domain === domain)
   if (

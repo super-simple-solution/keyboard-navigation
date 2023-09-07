@@ -12,7 +12,10 @@ chrome.runtime
     greeting: 'to-get-pattern',
     data: { domain },
   })
-  .then((res: PatternData) => setKeypad(res))
+  .then((res: PatternData | null) => {
+    if (!res) return
+    setKeypad(res)
+  })
 
 let isDetecting = false
 //监听popup发送的事件，监听鼠标hover元素
