@@ -1,21 +1,45 @@
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import '@/style/index.scss'
-import { setKeypad } from './util'
+import { initEventHandler } from '@/utils/extension-action'
+import { setKeyPad, removeKeyPad } from './util'
 import { PatternData } from '@/types/local.d'
 import Modal from './modal'
 
 const domain = location.hostname
+let localPattern: PatternData
 
-chrome.runtime
-  .sendMessage({
-    greeting: 'to-get-pattern',
-    data: { domain },
+const contentReq = {
+  'toggle-detect': toggleDetect,
+  'toggle-enable': {} => init(),
+}
+
+function domainEnabled() {
+  return chrome.storage.sync.set({
+    domain: false,
   })
-  .then((res: PatternData | null) => {
-    if (!res) return
-    setKeypad(res)
+}
+
+function init() {
+  domainEnabled().then((res) => {
+    if (res) {
+      chrome.runtime
+        .sendMessage({
+          greeting: 'to-get-pattern',
+          data: { domain },
+        })
+        .then((res: PatternData | null) => {
+          if (!res) return
+          localPattern = res
+          setKeyPad(res)
+        })
+    } else {
+      removeKeyPad(localPattern)
+    }
   })
+}
+
+init()
 
 let isDetecting = false
 //监听popup发送的事件，监听鼠标hover元素
@@ -24,6 +48,12 @@ chrome.runtime.onMessage.addListener((request) => {
     isDetecting = true
   }
 })
+
+function toggleDetect() {
+  isDetecting = !isDetecting
+}
+
+initEventHandler(contentReq)
 
 document.body.addEventListener('mouseover', (e) => {
   if (!isDetecting) return
@@ -72,7 +102,7 @@ document.body.addEventListener('click', (e) => {
         position: 'center',
         style: { top: '50%' },
       }).showToast()
-      setKeypad(res)
+      setKeyPad(res)
     })
 })
 
