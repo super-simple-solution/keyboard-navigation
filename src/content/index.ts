@@ -1,41 +1,42 @@
 import Toastify from 'toastify-js'
 import 'toastify-js/src/toastify.css'
 import '@/style/index.scss'
+import { isEmpty } from '@/utils'
 import { initEventHandler } from '@/utils/extension-action'
-import { setKeyPad, removeKeyPad } from './util'
-import { PatternData } from '@/types/local.d'
+import Navigate from './navigate'
+import { NON_AUTO_KEY } from '@/const'
+import { Pattern } from '@/types/local.d'
 import Modal from './modal'
 
 const domain = location.hostname
-let localPattern: PatternData
+let navigateIns: Navigate
 
 const contentReq = {
   'toggle-detect': toggleDetect,
-  'toggle-enable': {} => init(),
+  'toggle-enable': toggleEnable,
 }
 
-function domainEnabled() {
-  return chrome.storage.sync.set({
-    domain: false,
-  })
+function toggleEnable(enable = true) {
+  if (!navigateIns) return
+  enable ? navigateIns?.init() : navigateIns.undo()
 }
 
 function init() {
-  domainEnabled().then((res) => {
-    if (res) {
-      chrome.runtime
-        .sendMessage({
-          greeting: 'to-get-pattern',
-          data: { domain },
-        })
-        .then((res: PatternData | null) => {
-          if (!res) return
-          localPattern = res
-          setKeyPad(res)
-        })
-    } else {
-      removeKeyPad(localPattern)
-    }
+  const domain = location.hostname
+  chrome.storage.sync.get(NON_AUTO_KEY).then(({ [NON_AUTO_KEY]: domainList }) => {
+    const auto_focus =
+      !domainList || isEmpty(domainList) || !domainList.find((item: string) => domain === item || item.endsWith(domain))
+    chrome.runtime
+      .sendMessage({
+        greeting: 'to-get-pattern',
+        data: { domain },
+      })
+      .then((res: Pattern | null) => {
+        if (!res) return
+        if (res.next_selector?.length) {
+          navigateIns = new Navigate(res, auto_focus)
+        }
+      })
   })
 }
 
@@ -92,7 +93,8 @@ document.body.addEventListener('click', (e) => {
         test_url: location.href,
       },
     })
-    .then((res) => {
+    .then(() => {
+      // TODO: return pattern
       target.classList.remove('sss-hover')
       isDetecting = false
       Toastify({
@@ -102,8 +104,6 @@ document.body.addEventListener('click', (e) => {
         position: 'center',
         style: { top: '50%' },
       }).showToast()
-      setKeyPad(res)
+      init()
     })
 })
-
-// function geneSelector(el: Element, ancestorEl: Element) {}

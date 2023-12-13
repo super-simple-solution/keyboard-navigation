@@ -1,17 +1,27 @@
-import { getEle } from '@/utils'
 import { Pattern } from '@/types/local.d'
+import { getEle } from '@/utils'
 
 const keyCodeMap = {
   left: ['ArrowLeft', 'KeyA'],
   right: ['ArrowRight', 'KeyD'],
 }
 
-export function setKeyPad(pattern: Pattern) {
-  document.addEventListener('keydown', keyPad(pattern), false)
-}
+export default class Navigate {
+  pattern: Pattern = {} as Pattern
+  enabled: boolean = false
+  constructor(pattern: Pattern, auto_enable?: boolean) {
+    this.pattern = pattern
+    if (auto_enable) {
+      this.enabled = true
+    }
+  }
 
-export function removeKeyPad(pattern: Pattern) {
-  document.removeEventListener('keydown', keyPad(pattern), false)
+  init() {
+    document.addEventListener('keydown', keyPad(this.pattern), false)
+  }
+  undo() {
+    document.removeEventListener('keydown', keyPad(this.pattern), false)
+  }
 }
 
 // [attr~=value]  "value xxx"
@@ -26,8 +36,8 @@ function keyPad(pattern: Pattern) {
     const code = e.code
     if (userEditing() || !pattern) return
     // selector priority
-    const prevEle = getEleBySelectorList(pattern.prev_selector)
-    const nextEle = getEleBySelectorList(pattern.next_selector)
+    const prevEle = getEleBySelectorList(pattern.prev_selector) as HTMLElement
+    const nextEle = getEleBySelectorList(pattern.next_selector) as HTMLElement
     if (keyCodeMap.left.includes(code)) {
       prevEle && prevEle.click()
     } else if (keyCodeMap.right.includes(code)) {

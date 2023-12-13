@@ -1,4 +1,4 @@
-export type PatternData = {
+export type Pattern = {
   domain: string
   next_selector: string[]
   prev_selector: string[]
