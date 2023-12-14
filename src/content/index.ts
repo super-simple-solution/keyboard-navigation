@@ -18,13 +18,13 @@ const contentReq = {
 
 function toggleEnable(enable = true) {
   if (!navigateIns) return
-  enable ? navigateIns?.init() : navigateIns.undo()
+  enable ? navigateIns?.init() : navigateIns?.undo()
 }
 
 function init() {
   const domain = location.hostname
   chrome.storage.sync.get(NON_AUTO_KEY).then(({ [NON_AUTO_KEY]: domainList }) => {
-    const auto_focus =
+    const auto_enable =
       !domainList || isEmpty(domainList) || !domainList.find((item: string) => domain === item || item.endsWith(domain))
     chrome.runtime
       .sendMessage({
@@ -32,9 +32,10 @@ function init() {
         data: { domain },
       })
       .then((res: Pattern | null) => {
+        console.log(res, 'res')
         if (!res) return
         if (res.next_selector?.length) {
-          navigateIns = new Navigate(res, auto_focus)
+          navigateIns = new Navigate(res, auto_enable)
         }
       })
   })

@@ -13,31 +13,32 @@ export default class Navigate {
     this.pattern = pattern
     if (auto_enable) {
       this.enabled = true
+      this.init()
     }
   }
 
   init() {
-    document.addEventListener('keydown', keyPad(this.pattern), false)
+    this.enabled = true
+    document.addEventListener('keydown', this.keyPad.bind(this), false)
   }
   undo() {
-    document.removeEventListener('keydown', keyPad(this.pattern), false)
+    this.enabled = false
+    document.removeEventListener('keydown', this.keyPad.bind(this), false)
   }
-}
 
-// [attr~=value]  "value xxx"
-// [attr|=value] "value-xxx"
-// [attr^=value] "valuexxx"
-// [attr$=value] "xxxvalue"
-// [attr*=value] "xxxvaluexxx"
-// [class^='value' i] i or s
-// test url: https://postgrest.org/en/stable/releases/v10.2.0.html
-function keyPad(pattern: Pattern) {
-  return (e: KeyboardEvent) => {
+  // [attr~=value]  "value xxx"
+  // [attr|=value] "value-xxx"
+  // [attr^=value] "valuexxx"
+  // [attr$=value] "xxxvalue"
+  // [attr*=value] "xxxvaluexxx"
+  // [class^='value' i] i or s
+  // test url: https://postgrest.org/en/stable/releases/v10.2.0.html
+  keyPad(e: KeyboardEvent) {
     const code = e.code
-    if (userEditing() || !pattern) return
+    if (!this.enabled || !this.pattern || userEditing()) return
     // selector priority
-    const prevEle = getEleBySelectorList(pattern.prev_selector) as HTMLElement
-    const nextEle = getEleBySelectorList(pattern.next_selector) as HTMLElement
+    const prevEle = getEleBySelectorList(this.pattern.prev_selector) as HTMLElement
+    const nextEle = getEleBySelectorList(this.pattern.next_selector) as HTMLElement
     if (keyCodeMap.left.includes(code)) {
       prevEle && prevEle.click()
     } else if (keyCodeMap.right.includes(code)) {
@@ -57,6 +58,6 @@ function getEleBySelectorList(list: string[]) {
 
 function userEditing() {
   const activeTarget = document.activeElement
-  if (!activeTarget || activeTarget.tagName === 'BODY') return false
+  if (!activeTarget || activeTarget.tagName !== 'INPUT') return false
   return true
 }
