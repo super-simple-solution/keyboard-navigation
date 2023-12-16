@@ -14,6 +14,18 @@ const contentReq = {
   'to-save-detect-ele': toSaveDetectEle,
 }
 
+function domainMatch(domain) {
+  return (item) => domain === item || domain.endsWith(item)
+}
+
+function domainPropertyMatch(domain, isGeneric = false) {
+  return (item) => {
+    let curDomain = item.domain
+    let res = domain === curDomain || domain.endsWith(curDomain)
+    return isGeneric ? res || curDomain === '*' : res
+  }
+}
+
 const syncHour = 3
 async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
   let {
@@ -30,8 +42,8 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
   // config.localSpecificDomainList = config.localSpecificDomainList || []
   localPatternList = localPatternList || []
   domain_list = domain_list || []
-  const domainTarget = domain_list.find((item) => item === domain)
-  const domainPattern = localPatternList.find((item) => item.domain === domain)
+  const domainTarget = domain_list.find(domainMatch)
+  const domainPattern = localPatternList.find(domainPropertyMatch(domain))
   if (
     !forceUpdate &&
     localPatternList.length &&
@@ -40,7 +52,7 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
     Date.now() - pattern_list_updated_at <= 1000 * 60 * 60 * syncHour
   ) {
     if (!sendResponse) return
-    sendResponse(domainPattern || localPatternList[0])
+    sendResponse(domainPattern || localPatternList.domainPattern.find((item) => item.domain === '*'))
     return
   }
   const [{ data: patternList }, { data: domainList }] = await Promise.all([
@@ -49,7 +61,7 @@ async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
       .in('domain', domain ? [domain, '*'] : ['*']),
     dbTable().select('domain'),
   ])
-  sendResponse && sendResponse(patternList.find((item) => item.domain === domain || '*'))
+  sendResponse && sendResponse(patternList.find(domainPropertyMatch(domain, true)))
   chrome.storage.local.set({
     pattern_list: patternList,
     domain_list: domainList.map((item) => item.domain),
