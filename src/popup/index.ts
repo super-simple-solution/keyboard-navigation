@@ -3,7 +3,6 @@ import { isEmpty } from '@/utils'
 import { getActiveTab } from '@/utils/extension-action'
 import { NON_AUTO_KEY } from '@/const'
 
-const detectEle = document.querySelector('.detect')
 const switchEle = document.getElementById('switch') as HTMLInputElement
 getActiveTab().then(({ url }) => {
   const domain = new URL(url).hostname
@@ -12,10 +11,6 @@ getActiveTab().then(({ url }) => {
       !domainList || isEmpty(domainList) || !domainList.find((item: string) => domain === item || item.endsWith(domain))
     switchEle.checked = auto_enable
   })
-})
-
-detectEle?.addEventListener('click', () => {
-  getActiveTab().then(({ id }) => chrome.tabs.sendMessage(id, { greeting: 'to-detect' }))
 })
 
 switchEle?.addEventListener('change', () => {

@@ -27,7 +27,7 @@ function domainPropertyMatch(domain, isGeneric = false) {
 }
 
 const syncHour = 3
-async function toGetPattern({ forceUpdate = false, domain }, sendResponse) {
+async function toGetPattern({ forceUpdate = false, domain = '' }, sendResponse) {
   let {
     pattern_list_updated_at,
     pattern_list: localPatternList = [],
