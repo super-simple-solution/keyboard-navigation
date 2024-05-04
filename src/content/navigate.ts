@@ -56,8 +56,9 @@ function getEleBySelectorList(list: string[]) {
   return elRes
 }
 
+const INPUT_TAG = ['INPUT', 'TEXTAREA']
 function userEditing() {
   const activeTarget = document.activeElement
-  if (!activeTarget || activeTarget.tagName !== 'INPUT') return false
+  if (!activeTarget || !INPUT_TAG.includes(activeTarget.tagName)) return false
   return true
 }
