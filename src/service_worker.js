@@ -2,12 +2,8 @@ import { initEventHandler } from '@/utils/extension-action'
 import supabaseClient from '@/lib/supabase'
 
 function dbTable() {
-  return supabaseClient.from('pagination_selector')
+  return supabaseClient.from('pager')
 }
-
-// function configTable() {
-//   return supabaseClient.from('product')
-// }
 
 const contentReq = {
   'to-get-pattern': toGetPattern,
