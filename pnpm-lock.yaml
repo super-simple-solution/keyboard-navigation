@@ -11,6 +11,9 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.42.4
         version: 2.42.4
+      hotkeys-js:
+        specifier: ^3.13.9
+        version: 3.13.9
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.4
@@ -610,6 +613,9 @@ packages:
   has@1.0.3:
     resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==}
     engines: {node: '>= 0.4.0'}
+
+  hotkeys-js@3.13.9:
+    resolution: {integrity: sha512-3TRCj9u9KUH6cKo25w4KIdBfdBfNRjfUwrljCLDC2XhmPDG0SjAZFcFZekpUZFmXzfYoGhFDcdx2gX/vUVtztQ==}
 
   htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
@@ -1478,6 +1484,8 @@ snapshots:
   has@1.0.3:
     dependencies:
       function-bind: 1.1.1
+
+  hotkeys-js@3.13.9: {}
 
   htmlparser2@8.0.2:
     dependencies:

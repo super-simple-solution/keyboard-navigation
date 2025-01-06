@@ -32,7 +32,7 @@
       ],
       "run_at": "document_idle",
       "matches": [
-        "<all_urls>"
+        "https://cheerio.js.org/*"
       ],
       "all_frames": false
     }

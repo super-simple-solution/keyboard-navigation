@@ -1,3 +1,16 @@
 .sss-hover {
   background: rgba(255, 0, 0, 0.5) !important;
 }
+
+.ring-offset-2 {
+  --tw-ring-offset-width: 2px;
+}
+
+.ring-blue-500 {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1));
+}
+
+.ring-2 {
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)
+}

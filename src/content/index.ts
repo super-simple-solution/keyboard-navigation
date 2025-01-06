@@ -1,9 +1,11 @@
 import '@/style/index.scss'
+import { NON_AUTO_KEY } from '@/const'
+import type { Pattern } from '@/types/local.d'
 import { isEmpty } from '@/utils'
 import { initEventHandler } from '@/utils/extension-action'
 import Navigate from './navigate'
-import { NON_AUTO_KEY } from '@/const'
-import { Pattern } from '@/types/local.d'
+
+import hotkeys from 'hotkeys-js'
 
 let navigateIns: Navigate
 
@@ -11,9 +13,20 @@ const contentReq = {
   'toggle-enable': toggleEnable,
 }
 
+hotkeys('shift+up,esc', (_, handler) => {
+  switch (handler.key) {
+    case 'shift+up':
+      navigateIns?.init()
+      break
+    case 'esc':
+      navigateIns.unInstall()
+      break
+    default:
+  }
+})
+
 function toggleEnable(enable = true) {
-  if (!navigateIns) return
-  enable ? navigateIns?.init() : navigateIns?.undo()
+  enable ? navigateIns?.init() : navigateIns?.unInstall()
 }
 
 function init() {

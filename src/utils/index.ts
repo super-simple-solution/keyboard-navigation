@@ -15,7 +15,7 @@ interface DynamicObject {
 export function getAttrs(el: Element) {
   const res = {} as DynamicObject
   for (const key in el.attributes) {
-    if (isNaN(+key)) {
+    if (Number.isNaN(+key)) {
       res[key] = el.attributes[key].value
     }
   }
@@ -63,9 +63,9 @@ export function commonAncestor(node1: Node, node2: Node) {
   const parents1 = parents(node1)
   const parents2 = parents(node2)
 
-  if (parents1[0] != parents2[0]) throw 'No common ancestor!'
+  if (parents1[0] !== parents2[0]) throw 'No common ancestor!'
 
   for (let i = 0; i < parents1.length; i++) {
-    if (parents1[i] != parents2[i]) return parents1[i - 1]
+    if (parents1[i] !== parents2[i]) return parents1[i - 1]
   }
 }

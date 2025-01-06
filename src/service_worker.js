@@ -1,5 +1,5 @@
-import { initEventHandler } from '@/utils/extension-action'
 import supabaseClient from '@/lib/supabase'
+import { initEventHandler } from '@/utils/extension-action'
 
 function dbTable() {
   return supabaseClient.from('pager')
@@ -16,8 +16,8 @@ function domainMatch(domain) {
 
 function domainPropertyMatch(domain, isGeneric = false) {
   return (item) => {
-    let curDomain = item.domain
-    let res = domain === curDomain || domain.endsWith(curDomain)
+    const curDomain = item.domain
+    const res = domain === curDomain || domain.endsWith(curDomain)
     return isGeneric ? res || curDomain === '*' : res
   }
 }
@@ -57,7 +57,7 @@ async function toGetPattern({ forceUpdate = false, domain = '' }, sendResponse) 
       .in('domain', domain ? [domain, domain.match(/[^.]+\.\w+$/)[0], '*'] : ['*']),
     dbTable().select('domain'),
   ])
-  sendResponse && sendResponse(patternList.find(domainPropertyMatch(domain, true)))
+  sendResponse?.(patternList.find(domainPropertyMatch(domain, true)))
   chrome.storage.local.set({
     pattern_list: patternList,
     domain_list: domainList.map((item) => item.domain),
@@ -69,11 +69,11 @@ async function toSaveDetectEle(params, sendResponse) {
   const paginationRes = await dbTable().select('domain').eq('domain', params.domain)
   if (paginationRes.data.length) {
     const { data } = await dbTable().update(params).eq('domain', params.domain).select()
-    sendResponse && sendResponse(data[0])
+    sendResponse?.(data[0])
     refreshPattern()
   } else {
     const { data } = await dbTable().insert(params).select()
-    sendResponse && sendResponse(data[0])
+    sendResponse?.(data[0])
     refreshPattern()
   }
 }

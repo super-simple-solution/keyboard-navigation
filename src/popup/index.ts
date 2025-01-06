@@ -1,7 +1,7 @@
 import './style.scss'
+import { NON_AUTO_KEY } from '@/const'
 import { isEmpty } from '@/utils'
 import { getActiveTab } from '@/utils/extension-action'
-import { NON_AUTO_KEY } from '@/const'
 
 const switchEle = document.getElementById('switch') as HTMLInputElement
 getActiveTab().then(({ url }) => {
@@ -32,6 +32,6 @@ switchEle?.addEventListener('change', () => {
       chrome.tabs.sendMessage(id, { greeting: 'toggle-enable', data: switchEle.checked })
     })
     .catch((e) => {
-      console.log(e.message)
+      console.error(e.message)
     })
 })

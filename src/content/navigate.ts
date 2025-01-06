@@ -1,5 +1,8 @@
-import { Pattern } from '@/types/local.d'
+import type { Pattern } from '@/types/local.d'
 import { getEle } from '@/utils'
+
+import Toastify from 'toastify-js'
+import 'toastify-js/src/toastify.css'
 
 const keyCodeMap = {
   left: ['ArrowLeft', 'KeyA'],
@@ -8,7 +11,9 @@ const keyCodeMap = {
 
 export default class Navigate {
   pattern: Pattern = {} as Pattern
-  enabled: boolean = false
+  enabled = false
+  prevEle: HTMLElement | null = null
+  nextEle: HTMLElement | null = null
   constructor(pattern: Pattern, auto_enable?: boolean) {
     this.pattern = pattern
     if (auto_enable) {
@@ -19,9 +24,30 @@ export default class Navigate {
 
   init() {
     this.enabled = true
+    this.prevEle = getEleBySelectorList(this.pattern.prev_selector) as HTMLElement
+    this.nextEle = getEleBySelectorList(this.pattern.next_selector) as HTMLElement
     document.addEventListener('keydown', this.keyPad.bind(this), false)
   }
-  undo() {
+
+  check() {
+    if (!this.enabled) return
+    if (this.prevEle && this.nextEle) {
+      this.prevEle.classList.add('ring-2', 'ring-blue-500')
+      this.nextEle.classList.add('ring-2', 'ring-blue-500')
+    } else {
+      this.unInstall()
+      Toastify({
+        text: 'No element found, please check the selector',
+        duration: 3000,
+        position: 'right',
+        style: {
+          background: 'linear-gradient(to right, #00b09b, #96c93d)',
+        },
+      }).showToast()
+    }
+  }
+
+  unInstall() {
     this.enabled = false
     document.removeEventListener('keydown', this.keyPad.bind(this), false)
   }
@@ -36,19 +62,16 @@ export default class Navigate {
   keyPad(e: KeyboardEvent) {
     const code = e.code
     if (!this.enabled || !this.pattern || userEditing()) return
-    // selector priority
-    const prevEle = getEleBySelectorList(this.pattern.prev_selector) as HTMLElement
-    const nextEle = getEleBySelectorList(this.pattern.next_selector) as HTMLElement
     if (keyCodeMap.left.includes(code)) {
-      prevEle && prevEle.click()
+      this.prevEle?.click()
     } else if (keyCodeMap.right.includes(code)) {
-      nextEle && nextEle.click()
+      this.nextEle?.click()
     }
   }
 }
 
 function getEleBySelectorList(list: string[]) {
-  let elRes
+  let elRes: Element | null | undefined = null
   for (const selector of list) {
     elRes = getEle(selector)
     if (elRes) break
