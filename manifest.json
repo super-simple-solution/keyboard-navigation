@@ -1,8 +1,8 @@
 {
   "name": "Previous / Next page keyboard navigation",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "manifest_version": 3,
-  "description": "Browser plug-in, it is convenient to use the left and right keys of the keyboard to turn pages",
+  "description": "It's convenient to use the left and right keys of the keyboard to turn pages",
   "icons": {
     "16": "assets/icons/16.png",
     "32": "assets/icons/32.png",
